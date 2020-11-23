@@ -14,8 +14,8 @@ import time
 import re
 from scipy import spatial
 
-sys.path.extend(os.getcwd())
-from read_data.rijksdriehoek import Rijksdriehoek
+#local packages
+from rijksdriehoek import Rijksdriehoek
 
 class dataset:
     '''
