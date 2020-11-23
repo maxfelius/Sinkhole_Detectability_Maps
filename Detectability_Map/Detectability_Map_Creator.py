@@ -2,14 +2,6 @@
 @author: Max Felius
 
 Script for creating detectability maps whereby the minimum detectable sinkhole radius will be determined.
-
-# ROADMAP
-1. Load the data (note: check for presence of rd coordinates)
-2. Subdivide area into 4 block
-3. Determine possibility of a sinkhole in that block
-    3.1 if yes, subdivide block into 4 subblocks -> goto 3
-    3.2 if no, create polygon with R set to block diameter
-
 '''
 
 #imports
@@ -17,6 +9,13 @@ import numpy as np
 import pandas as pd
 import time, os, sys, datetime
 from scipy import spatial
+import matplotlib.pyplot as plt
+import progressbar
+
+from decouple import config
+
+#import package files
+from Detectability_Map.read_sentinel1_csv_data import dataset
 
 class detectability_map:
     '''
@@ -26,25 +25,38 @@ class detectability_map:
         Coordinates headers are: 'pnt_rdx','pnt_rdy'
         '''
         self.filename = filename
-        self.data = pd.read_csv(self.filename)
 
-    def block_tester(self):
+        #detectability map parameters
+
+
+        print(f'Started reading data file: {filename}')
+        self.dataset_obj = dataset(self.filename)
+        print(f'Finished reading the dataset')
+
+        #extracting variables from object
+        self.extend_rd = self.dataset_obj.extend_rd #[min x, max x, min y, max y]
+        self.extend_wgs = self.dataset_obj.extend_wgs #[min lon, max lon, min lat, max lat]
+        self.header = self.dataset_obj.header
+        self.epochs = self.dataset_obj.epochs
+
+    def check_subset(self,subset,S,R,x0,y0):
         '''
+        Checks if a subset has a solvable design matrix
+
+        Input:
+        :type subset: pandas dataframe
+        :type S: int
+        :type R: int
+        :type x0: int
+        :type y0: int
+
+        Output
+        :rtype: boolean
         '''
-        rdx_max = max(self.data['pnt_rdx'])
-        rdx_min = min(self.data['pnt_rdx'])
-        rdy_max = max(self.data['pnt_rdy'])
-        rdy_min = min(self.data['pnt_rdy'])
 
-        mid_x = (rdx_max + rdx_min)/2
-        mid_y = (rdy_max + rdy_min)/2
+        r = np.sqrt((subset['pnt_rdx']-x0)**2 + (subset['pnt_rdy']-y0)**2)
 
-        radius = max(mid_x,mid_y)
-
-        p1 = 0
-        p2 = 0
-        p3 = 0
-        p4 = 0
+        design_matrix = np.array([(1/R**2)*np.exp(-np.pi*(r**2/R**2))])
 
 def main():
     '''
@@ -57,10 +69,10 @@ def _test():
     Function to test the detectability_map class
 
     '''
-    filename = 'name.csv'
+    mrss = config('MRSS')
+    dataset_filename = os.path.join(mrss,'full-pixel_mrss_s1_asc_t88_v4_080a1cbf7de1b6d42b3465772d9065fe7115d4bf.csv')
 
-    obj = detectability_map(filename)
+    obj = detectability_map(dataset_filename)
 
 if __name__ == '__main__':
     _test()
-

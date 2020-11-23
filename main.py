@@ -10,6 +10,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+#import package
+sys.path.extend(os.path.join(os.getcwd(),'Detectability_Map'))
+
 class make_maps:
     '''
     '''
