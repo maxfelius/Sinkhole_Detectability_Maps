@@ -71,7 +71,7 @@ class detectability_map:
 
         for i in tqdm(range(range_len),desc='Making the Map...'):
             #save intermediate results
-            if count == 1000:
+            if count == 10000:
                 temp = return_result
                 temp = temp.reshape((ny,nx))
                 name = f'Detectability_{R}_iterx_{i}.tiff'
