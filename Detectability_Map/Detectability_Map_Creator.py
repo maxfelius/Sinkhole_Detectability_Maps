@@ -110,7 +110,7 @@ class detectability_map:
         '''
 
         # print('Computing the radius.')
-        r = np.sqrt((subset['pnt_rdx']-x0)**2 + (subset['pnt_rdy']-y0)**2)
+        r = np.sqrt((subset['pnt_rdx'].values-x0)**2 + (subset['pnt_rdy'].values-y0)**2)
 
         # print('Making Design Matrix.')
         design_matrix = np.array([(1/R**2)*np.exp(-np.pi*(r**2/R**2))])
