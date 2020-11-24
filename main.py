@@ -88,7 +88,7 @@ class make_maps:
         x_eval = xv.ravel()
         y_eval = yv.ravel()
 
-        image_out = obj.make_map(R,S,x_eval,y_eval)
+        image_out = obj.make_map(R,S,x_eval,y_eval,len(x_range),len(y_range))
 
         image = image_out.reshape((len(y_range),len(x_range)))
         

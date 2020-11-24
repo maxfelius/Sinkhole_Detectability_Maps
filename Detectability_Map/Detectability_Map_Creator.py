@@ -11,6 +11,7 @@ import time, os, sys, datetime
 from scipy import spatial
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 from decouple import config
 
@@ -40,7 +41,7 @@ class detectability_map:
         self.header = self.dataset_obj.header
         self.epochs = self.dataset_obj.epochs
 
-    def make_map(self,R,S,x_eval,y_eval):
+    def make_map(self,R,S,x_eval,y_eval,nx,ny):
         '''
         Method to create the detectability map. Input are the evaluation coordinates and the radius of infuence.
 
@@ -49,15 +50,35 @@ class detectability_map:
         :type S: int
         :type x_eval: list[float]
         :type y_eval: list[float]
+        :type nx: int
+        :type ny: int
 
         Output:
-        :rtype list[boolean]
+        :rtype np.array([boolean])
         '''
+        #create map for saving intermediate results
+        if not os.path.exists('temp'):
+            print('Created Temp Folder.')
+            os.mkdir('temp')
+        else:
+            print('Temp folder already Exists.')
+
+        count = 0
+
         range_len = len(x_eval)
 
         return_result = np.zeros((range_len,1))
 
         for i in tqdm(range(range_len),desc='Making the Map...'):
+            #save intermediate results
+            if count == 1000:
+                temp = return_result
+                temp = temp.reshape((ny,nx))
+                name = f'Detectability_{R}_iterx_{i}.tiff'
+                filename_save = os.path.join('temp',name)
+                plt.imsave(filename_save,temp)
+                count = 0
+
             x_pos = x_eval[i]
             y_pos = y_eval[i]
 
@@ -69,6 +90,7 @@ class detectability_map:
             # subset = self.dataset_obj.data[subset_idx]
             # print('Checking subset for solution')
             return_result[i] = self.check_subset(subset,S,R,x_pos,y_pos)
+            count += 1
 
         return return_result
 
@@ -95,7 +117,8 @@ class detectability_map:
 
         # print('Computing the conditional number.')
 
-        if len(design_matrix)==0:
+        # if len(design_matrix)==0:
+        if len(r)==0:
             return 0
         else:
             cond_number = np.linalg.cond(design_matrix)
@@ -149,7 +172,7 @@ def _test():
     x_eval = xv.ravel()
     y_eval = yv.ravel()
 
-    image_out = obj.make_map(R,S,x_eval,y_eval)
+    image_out = obj.make_map(R,S,x_eval,y_eval,len(x_range),len(y_range))
 
     print(image_out.shape)
     print(image_out)
