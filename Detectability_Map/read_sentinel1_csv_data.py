@@ -15,7 +15,7 @@ import re
 from scipy import spatial
 
 #local packages
-from rijksdriehoek import Rijksdriehoek
+from Detectability_Map.rijksdriehoek import Rijksdriehoek
 
 class dataset:
     '''
@@ -101,6 +101,18 @@ class dataset:
 
         print(f'Finished creating the subset. Time: {time.time()-start} seconds.')
         return pd.DataFrame(self.data.values[subset],columns=self.header)
+
+    def create_spatial_subset(self,point,search_radius):
+        '''
+        Subset creator that only returns the coordinates. This is much faster than the other subset method
+        '''
+        # start = time.time()
+        # print(f'Creating subset using the KD-Tree with center = {point} and search radius = {search_radius}')
+        subset = self.data_kdtree.query_ball_point(point,r=search_radius)
+
+        # print(f'Finished creating the subset. Time: {time.time()-start} seconds.')
+        
+        return self.data[self.coordinates].iloc[subset]
 
 def _test():
     '''
