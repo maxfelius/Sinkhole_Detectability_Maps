@@ -74,7 +74,7 @@ class detectability_map:
             if count == 10000:
                 temp = return_result
                 temp = temp.reshape((ny,nx))
-                name = f'Detectability_{R}_iterx_{i}.tiff'
+                name = f'Detectability_R_{R}_iter_{i}.tiff'
                 filename_save = os.path.join('temp',name)
                 plt.imsave(filename_save,temp)
                 count = 0
