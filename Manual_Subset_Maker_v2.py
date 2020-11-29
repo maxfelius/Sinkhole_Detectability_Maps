@@ -53,7 +53,7 @@ class subset_creator:
         if self.save_full_dataset:
             header = list(self.data)
         else:
-            header = ['id','pnt_lon','pnt_lat']
+            header = ['pnt_id','pnt_lon','pnt_lat']
 
         df_out = pd.DataFrame(columns=header)
         start = time.time()
@@ -62,7 +62,7 @@ class subset_creator:
         for i in range(len(self.data)):
             temp = self.data.iloc[i]
             if temp['pnt_lat'] <= self.lat+self.theta and temp['pnt_lat'] >= self.lat-self.theta and temp['pnt_lon'] <= self.lon + self.theta and temp['pnt_lon'] >= self.lon-self.theta:
-                idName = temp['id']
+                idName = temp['pnt_id']
                 print(f'Added point {idName}')
                 df_out = df_out.append(temp[header],ignore_index=True)
 
@@ -73,7 +73,7 @@ class subset_creator:
         '''
         Method to save the subset 
         '''
-        filename_out = 'subset_r{}_lon{:.02f}_lat{:.02f}.csv'.format(self.radius,self.lon,self.lat)
+        filename_out = 'subset_r{:.0f}_lon{:.02f}_lat{:.02f}.csv'.format(self.radius,self.lon,self.lat)
         print(f'Saving file with radius {self.radius} and center points lon={self.lon} and lat={self.lat}.')
         
         #folder to create the subset in
@@ -90,7 +90,7 @@ def _test():
     filename = 'full-pixel_mrss_s1_asc_t88_v4_080a1cbf7de1b6d42b3465772d9065fe7115d4bf.csv'
 
     filename_in = os.path.join(path_mrss,filename)
-    radius = 1000 #1km
+    radius = 1000/2.5 #1km. 2.5 is a factor such that the subset is closer to 1 km
 
     #center coordinates
     '''
