@@ -58,10 +58,10 @@ class detectability_map:
         '''
         #create map for saving intermediate results
         if not os.path.exists('temp'):
-            print('Created Temp Folder.')
+            # print('Created Temp Folder.')
             os.mkdir('temp')
         else:
-            print('Temp folder already Exists.')
+            # print('Temp folder already Exists.')
 
         count = 0
 
