@@ -90,7 +90,7 @@ def _test():
     filename = 'full-pixel_mrss_s1_asc_t88_v4_080a1cbf7de1b6d42b3465772d9065fe7115d4bf.csv'
 
     filename_in = os.path.join(path_mrss,filename)
-    radius = 1000/2.5 #1km. 2.5 is a factor such that the subset is closer to 1 km
+    radius = 200/2.5 #1km. 2.5 is a factor such that the subset is closer to 1 km
 
     #center coordinates
     '''
@@ -102,7 +102,7 @@ def _test():
     lon = 6.05879
     lat = 50.86837
 
-    save_full_dataset=False
+    save_full_dataset=True
 
     subset_creator(radius,filename_in,lon,lat,save_full_dataset)
 
