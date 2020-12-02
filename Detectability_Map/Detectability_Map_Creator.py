@@ -2,6 +2,8 @@
 @author: Max Felius
 
 Script for creating detectability maps whereby the minimum detectable sinkhole radius will be determined.
+
+OLD VERSION. NEWEST VERSION IN THE NOTEBOOK
 '''
 
 #imports
